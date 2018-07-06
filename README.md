@@ -1,4 +1,4 @@
-﻿# ◆Stardog◆
+# ◆Stardog◆
 
 106學年度夏季學院 〔資料科學程式設計〕
 
@@ -20,3 +20,5 @@
 
    1. Download Sublime text
    2. Amend README
+
+   【test】(https://tuanstar90208.github.io/stardog/)
