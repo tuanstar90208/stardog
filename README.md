@@ -12,6 +12,11 @@
 
 * In class
 
-1. Install Github Desktop
-2. Creat a README file
-3. 
+   1. Install Github Desktop
+   2. Creat a README file
+   3. operating
+
+* At home
+
+   1. Download Sublime text
+   2. Amend README
