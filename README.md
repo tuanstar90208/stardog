@@ -21,4 +21,4 @@
    1. Download Sublime text
    2. Amend README
 
-   [test](http://github.com)
+   [test](https://tuanstar90208.github.io/stardog/week%201/hw1.html)
