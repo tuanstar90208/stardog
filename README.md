@@ -21,4 +21,4 @@
    1. Download Sublime text
    2. Amend README
 
-   〔test〕(https://tuanstar90208.github.io/stardog/)
+   [test](http://github.com)
