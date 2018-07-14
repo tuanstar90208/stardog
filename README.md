@@ -18,11 +18,11 @@
 
 * At home
 
-   1.​[Datacamp] Intermediate R
-   2.learn %>%
-   3.​[Datacamp] Introduction to the tidyverse
-   4.[Datacamp] Cleaning with R​
-   5.​[Datacamp] Introduction to the tidyverse​
+   1. ​[Datacamp] Intermediate R
+   2. learn %>%
+   3. [Datacamp] Introduction to the tidyverse
+   4. [Datacamp] Cleaning with R​
+   5. [Datacamp] Introduction to the tidyverse​
 
    [test](https://tuanstar90208.github.io/stardog/week%201/hw1.html)
 
