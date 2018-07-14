@@ -18,10 +18,22 @@
 
 * At home
 
-   1. Download Sublime text
-   2. Amend README
+   1.​[Datacamp] Intermediate R
+   2.learn %>%
+   3.​[Datacamp] Introduction to the tidyverse
+   4.[Datacamp] Cleaning with R​
+   5.​[Datacamp] Introduction to the tidyverse​
 
    [test](https://tuanstar90208.github.io/stardog/week%201/hw1.html)
 
+### week 2
+
+* In calss
+
+I did not go to school(Traffic problems)
+
+* At home
+
+   1.hand in the delayed assignment
 
    [hw2_part1](https://tuanstar90208.github.io/stardog/week2/task1.html)
