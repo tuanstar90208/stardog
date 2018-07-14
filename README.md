@@ -24,4 +24,4 @@
    [test](https://tuanstar90208.github.io/stardog/week%201/hw1.html)
    
    
-   [hw2_part1](https://tuanstar90208.github.io/stardog/week2/task1.html)
+   
