@@ -1,0 +1,11 @@
+---
+title: "task1"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+
+ggplot(data=attitude,aes(x=rating,y=learning))+geom_boxplot()
+```
+
