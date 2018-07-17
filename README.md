@@ -35,6 +35,7 @@ I did not go to school(Traffic problems)
 * At home
 
    1.hand in the delayed assignment
+   2.[Datacamp] Exploratory Data Analysis​
 
    [hw2_part1](https://tuanstar90208.github.io/stardog/week2/morning/task1.html)
    [hw2_part2](https://tuanstar90208.github.io/stardog/week2/afternoon/marvel.html)
