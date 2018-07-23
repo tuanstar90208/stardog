@@ -28,7 +28,7 @@
 
 ### week 2
 
-* In calss
+* In class
 
 I did not go to school(Traffic problems)
 
@@ -39,3 +39,14 @@ I did not go to school(Traffic problems)
 
    [hw2_part1](https://tuanstar90208.github.io/stardog/week2/morning/task1.html)
    [hw2_part2](https://tuanstar90208.github.io/stardog/week2/afternoon/marvel.html)
+
+### week3
+
+* In class
+
+1. EDA練習
+2.  TFIDF -> PCA -> K-means練習
+
+* At home
+
+1. EDA操作
