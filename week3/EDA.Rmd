@@ -1,0 +1,384 @@
+---
+title: "Report of Mental Health Issues or Gun Laws"
+output: html_document
+---
+[Data from](https://www.kaggle.com/zakashx/mental-health-issues-or-gun-laws/data)
+
+author: 'Akash '
+date: '15 December 2017'
+
+# 介紹
+
+美國2017年發生了大規模的槍擊案件，此分析可能為移民，槍支法，精神健康問題和吸毒問題提供信息。但這個分析僅限於大規模射擊，其他犯罪，如武器，殺人和爆炸等都沒有討論。
+
+In this Project, The USA mass shooting dataset is used to analyze information about the shooter with respect to Race, States, Causes and Targets.
+
+# 本次目的-藉由分析美國相關州之間，槍手犯案的各類因素
+
+# environment
+
+```{r}
+library(data.table)
+library(shiny) 
+library(lubridate)
+library(plotly)
+library(tidyverse)
+library(readr)
+library(tidyr)
+library("leaflet")
+```
+# 資料讀取
+
+```{r}
+
+#格式化日期 
+
+Dateformat = cols(Date = col_date(format = "%m/%d/%Y"))
+
+#讀取csv檔
+
+Mass_Shootings_Dataset_Ver_5 <- read_csv("../week3/us-mass-shootings-last-50-years/Mass Shootings Dataset Ver 5.csv"
+                              , col_types = Dateformat)
+
+#將數據分配到數據框
+Crime <- data.table(Mass_Shootings_Dataset_Ver_5)
+
+#Dimenstions of the dataset
+dim(Crime)
+
+#Headers of the dataset
+head(Crime)
+```
+
+
+
+# 前期先處理的數據.
+
+```{r }
+
+#Preprocessing Race
+Crime[Race=="unclear",Race:="Unknown"]
+Crime[is.na(Race),Race:="Other"]
+Crime[ Race=="black" | Race=="Black American or African American" | Race=="Black American or African American/Unknown",Race:="Black"]
+Crime[Race=="white" | Race=="White American or European American" | Race=="White American or European American/Some other Race" ,Race:="White"]
+Crime[Race=="Asian American"| Race=="Asian American/Some other race" ,Race:="Asian"]
+Crime[Race=="Unknown"|Race=="Two or more races" | Race=="Some other race",Race:="Other"]
+
+#Preprocessing Date
+Crime[,Month:=as.factor(month(Date))]
+Crime[,Day:=as.factor(day(Date))]
+Crime[,Year:=as.factor(year(Date))]
+
+#Preprocessing Gender
+Crime[Gender=='M',Gender:="Male"]
+Crime[Gender=='M/F',Gender:="Male/Female"]
+Crime[is.na(Gender),Gender:="Unknown"]
+
+#Preprocessing Cause
+Crime[is.na(Cause)|Cause=="unknown",Cause:="Unknown"]
+Crime[Cause=='domestic dispute'|Cause=='domestic disputer', Cause:='domestic dispute']
+Crime[Cause=="anger"|Cause=="frustration",Cause:="Anger and Fustration"]
+Crime[Cause=="failing exams" | Cause=="suspension", Cause:="Failing exams and suspension"]
+
+#Preprocessing Target
+Crime[is.na(Target),Target:="Unknown"]
+Crime[Target=='Family'|Target=='Family/Neighbors'|Target=='Family+students'|Target=='Coworkers'|Target=='coworkers'
+|Target=='Students+Parents'|Target=='Family+random'|Target=="partner's family"|Target=="Coworker's Family"
+|Target=='neighbors'|Target=='Girlfriend'|Target=="House Owner"
+|Target=="Friends",Target:="Family,Girlfriend(Relationships at that time)"]
+
+Crime[Target=='Children'|Target=='school girls'|Target=='Students'
+|Target=='Students+Teachers'|Target=='Teachers',Target:="School(Teachers or Students)"] 
+
+Crime[Target=='Ex-Girlfriend'|Target=='Ex-Wife & Family'|Target == 'Ex-Girlfriend & Family' |Target == 'Ex-GirlFriend'
+|Target=='Ex-Girlfriend+random'|Target=='Ex-girlfriend'|Target=="Ex-Coworkers"|Target=='Ex-Wife'|Target=='Ex-Girlfriend', Target:="Girlfriend/Wife/coworkers ( past relationships)"]
+
+Crime[Target=='Sikhs'|Target=='monks'|Target=='prayer group',Target:="Motives against religion"] 
+
+Crime[Target=="Marines"|Target=="Policeman+Council Member"| Target=="police"|
+Target=="Policeman"|Target=="Trooper"|Target=="Social Workers", Target:="Marines,Police and Social Workers(Police Brutality)"]
+
+Crime[Target=="birthday party bus"|Target=="party guests"|Target=="uninvited guests", Target:="Parties"]
+
+#Preprocessing Mental Health Issues
+Crime[`Mental Health Issues`=="unknown",`Mental Health Issues`:="Unknown"]
+
+#Preprocessing Age
+Crime[is.na(Age),Age:=0]
+NewAge <-
+sapply(Crime$Age,function(x){
+if(x>=10 && x<20){
+"10+ Teen" }
+else if(x>=20 && x<30){
+"20's"}
+else if(x>=30 && x<40){
+"30's"}
+else if(x>=40 && x<50){
+"40's"}
+else if(x>=50 && x<60){
+"50's"}
+else if(x>=60 && x<70){
+"60's"}
+else if(x>=70 && x<80){
+"70's"}
+else if(x>80){
+"Multiple Shooters"}
+else{
+"Age Unknown"}
+})
+
+#Preprocessing State
+Crime$State <- sapply(Crime$Location, function(parts)
+		{
+			temp <- strsplit(parts, split = ",")
+  			sapply(temp, function(new)
+				{	
+					new[2]
+    
+  				}
+			      )
+		})
+
+Crime$City <- sapply(Crime$Location, function(parts)
+		{
+			temp <- strsplit(parts, split = ",")
+  			sapply(temp, function(new)
+				{	
+					new[1]
+    
+  				}
+			      )
+		})
+
+Crime[is.na(`State`), `State`:="Unknown"]
+Crime[`State`==' CA'| `State`== ' San Diego'| `State`==" LA" |`State`== " California", `State`:="California"]
+Crime[`State`==' NV'| `State`==" Nevada",`State`:="Nevada"]
+Crime[`State`==' CO'| `State` == " Colorado",`State`:="Colorado"] 
+Crime[`State`=='  Virginia'|`State`==" Virginia",`State`:="Virginia"]
+Crime[`State`==" TX"| `State` == " Texas",`State`:="Texas"]
+Crime[`State`==" MD",`State`:="Maryland"]
+Crime[`State`==" PA"|`State`==" Lancaster"|`State`==" Souderton",`State`:="Pennsylvania"]
+Crime[`State`==" WA"|`State`==" Washington",`State`:="Washington"]
+
+
+#Preprocessing Map Data
+KnownLocations = Crime %>% drop_na(Latitude) %>% drop_na(Longitude)
+
+colmap <- colorFactor(topo.colors(9), Crime$Race)
+colgen <- colorFactor(topo.colors(6), Crime$Gender)
+
+```
+Data after preprocessing
+
+## Modified Gender, Race and Mental Health Issues
+```{r}
+
+table(Crime$Race)
+table(Crime$`Mental Health Issues`)
+table(Crime$Gender)
+
+```
+
+## Frequency in Day Month and Year
+```{r  eval=FALSE}
+
+table(Crime$Day)
+table(Crime$Month)
+table(Crime$Year)
+
+```
+
+## Modified Age and State
+```{r}
+
+table(NewAge)
+table(Crime$State)
+
+
+```
+
+## Modified Cause and Target columns
+```{r}
+
+table(Crime$Cause)
+
+table(Crime$Target)
+
+```
+
+# 分析開始
+
+## 州之間的事故分析
+
+### 有事故的州
+
+根據資料，加州、德州及佛羅里達州都有大規模槍擊，作者認為這些州的共通點都有海岸及炎熱的天氣，「可能」與槍擊案發生的原因有關
+
+```{r}
+plot_ly(data = Crime
+        ,type = 'histogram'
+        ,x = ~`State`) %>% 
+layout(title = "Number of incidents by State"
+         , xaxis = list(title = "Year"))
+```
+
+### 州之中的受害者
+
+資料中沒有出現內華達州，表示該州並沒有發生太多事件
+
+```{r}
+plot_ly(data = Crime[,.('Total victims'= sum(`Total victims`)),by=.(`State`)]
+        ,type = 'bar'
+        ,x = ~`State`
+        ,y = ~`Total victims`) %>% 
+layout(title = "Total victims by State"
+         , barmode = 'stack'
+         , xaxis = list(title = "State")
+         , yaxis = list(title = "Victims")
+         , legend = list(x = 0, y = 1)
+         , hovermode = 'compare')
+```
+
+### 聚類圖
+
+```{r}
+KnownLocations %>%
+                 leaflet() %>%
+                 addTiles() %>%
+                 addProviderTiles("OpenStreetMap.HOT")%>%
+                 addMarkers(lng = ~Longitude, lat = ~Latitude,clusterOptions = markerClusterOptions(), label=~Location) 
+```
+
+## 基於性別和心理健康問題的分析
+
+### 性別州
+
+加州，伊利諾伊州和阿拉巴馬州有女性射手。
+
+```{r}
+plot_ly(data = Crime
+        ,type = 'histogram'
+        ,x = ~`State`
+        ,color =~`Gender`) %>% 
+  layout(title = "Total incidents by State with respect to Gender"
+         , showlegend = T
+         , barmode = 'stack'
+         , xaxis = list(title = "State")
+         , legend = list(x = 1, y = 1)
+         , hovermode = 'compare')
+```
+
+### 有精神健康問題的州
+
+資料顯示，槍手之中有精神疾病的在加州最多，其次是華盛頓。
+
+心理健康問題的原因很多，在學校欺凌，沒有達到社會標準，容易獲得影響大腦獎勵制度的藥物，以及社交媒體（當人們停止互相交流並失去與現實的聯繫時）。
+
+```{r}
+plot_ly(data = Crime
+        ,type = 'histogram'
+        ,x = ~`State`
+        ,color =~`Mental Health Issues`) %>% 
+  layout(title = "Total incidents by State with respect to Mental Health"
+         , showlegend = T
+         , barmode = 'stack'
+         , xaxis = list(title = "State")
+         , legend = list(x = 1, y = 1)
+         , hovermode = 'compare')
+```
+#### 精神健康問題的散點圖
+```{r}
+plot_ly(data = Crime
+        ,type = 'scatter'
+        ,mode = 'markers' 
+        ,hoverinfo = 'text'
+        ,x = ~Year
+        ,y = ~State
+        ,size = ~`Total victims`
+        ,color = ~`Mental Health Issues`
+        ,colors = c('Green','Black','Blue','Red')
+        ,text = ~paste("Location: ", Location
+                       ,'\n Date: ', Date 
+                       ,'\n Total victims : ', `Total victims` 
+                       ,'\n Race: ', Race)) %>% 
+    layout(title = "Mass Shootings in US with year and state"
+           , xaxis = list(title = "Years")
+           , yaxis = list(title = "States"))
+```
+
+## 在種族和年齡方面的分析
+
+### 種族
+
+例如，加州的白人射手數量最多
+
+```{r}
+plot_ly(data = Crime
+        ,type = 'histogram'
+        ,x = ~`State`
+        ,color =~`Race`) %>% 
+  layout(title = "Total victims by State with respect to Race"
+         , showlegend = T
+         , barmode = 'stack'
+         , xaxis = list(title = "State")
+         , legend = list(x = 1, y = 1)
+         , hovermode = 'compare')
+```
+
+### 年齡
+
+
+```{r, message=FALSE, warning=FALSE}
+plot_ly(data = Crime
+        ,type = 'histogram'
+        ,x = ~`State`
+        ,color =~`NewAge`) %>% 
+  layout(title = "Total incidents by State with respect to Age"
+         , showlegend = T
+         , barmode = 'stack'
+         , xaxis = list(title = "State")
+         , legend = list(x = 1, y = 1)
+         , hovermode = 'compare')
+```
+
+## 原因和目標的分析
+
+### 原因
+
+例如，加州擁有最多精神病患者以及會犯下恐怖行動的槍手
+
+```{r, message=FALSE, warning=FALSE}
+plot_ly(data = Crime
+        ,type = 'histogram'
+        ,x = ~`State`
+        ,color =~`Cause`) %>% 
+  layout(title = "Total incidents by State with respect to Cause"
+         , showlegend = T
+         , barmode = 'stack'
+         , xaxis = list(title = "State")
+         , legend = list(x = 1, y = 1)
+         , hovermode = 'compare')
+```
+
+### 目標
+
+學校和家庭，是恐怖槍手所鎖定的最佳目標之一
+
+作者認為可能有牽涉到心理健康問題，當時位在喬治亞的7名槍手犯下槍擊案的目標也是鎖定家人、女朋友以及同事等等。
+
+```{r, message=FALSE, warning=FALSE}
+plot_ly(data = Crime
+        ,type = 'histogram'
+        ,x = ~`State`
+        ,color =~`Target`) %>% 
+  layout(title = "Total incidents by State with respect to Target"
+         , showlegend = F
+         , barmode = 'stack'
+         , xaxis = list(title = "State")
+	, hovermode = 'compare')
+```
+
+
+# 心得
+
+藉由這次的學習，第一次透過資料來達到分析數據的體驗
