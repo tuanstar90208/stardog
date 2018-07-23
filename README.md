@@ -50,3 +50,5 @@ I did not go to school(Traffic problems)
 * At home
 
 1. EDA操作
+
+[EDA](https://tuanstar90208.github.io/stardog/week3/EDA.html)
