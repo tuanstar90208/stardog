@@ -50,5 +50,6 @@ I did not go to school(Traffic problems)
 * At home
 
 1. EDA操作
-
+2. TFIDF_PCA_K-means操作
 [EDA](https://tuanstar90208.github.io/stardog/week3/EDA.html)
+[TFIDF_PCA_K-means]https://tuanstar90208.github.io/stardog/week3/TFIDF_PCA_K-means.html
