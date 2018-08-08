@@ -18,14 +18,20 @@ navbarMenu("圖型",
            
            tabPanel("條狀圖",
                     
-                    sidebarLayout(
+                    sidebarLayout(      
+                      
+                      # Define the sidebar with one input
                       sidebarPanel(
-                        radioButtons("radio", label = "Choices", choices = list("Choice 1" = 1, "Choice 2" = 2)),
-                        sliderInput("slider1", label = "Slider", min = 0, max = 100, value = 50)
+                        selectInput("region", "教育程度:", 
+                                    choices=colnames(WorldPhones)),
+                        hr(),
+                        helpText("Data from AT&T (1961) The World's Telephones.")
                       ),
-                      mainPanel("逮給厚，哇喜逮頑歐郎")
+                      
+                      # Create a spot for the barplot
+                      mainPanel(
+                        plotOutput("phonePlot")  
+                      )
+                      
                     )
-           ))
-)
-)
-           
+           )

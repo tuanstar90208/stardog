@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1533690006104.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "6963BB76",
+    "lastKnownWriteTime" : 1533690494,
+    "last_content_update" : 1533690561966,
+    "path" : "~/GitHub/stardog/week5/123456/ui.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "24,51",
+        "scrollLine" : "16"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

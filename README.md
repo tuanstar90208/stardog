@@ -55,3 +55,24 @@ I did not go to school(Traffic problems)
 
  [EDA](https://tuanstar90208.github.io/stardog/week3/EDA.html)
  [TFIDF_PCA_K-means](https://tuanstar90208.github.io/stardog/week3/TFIDF_PCA_K-means.html)
+
+### week4
+
+* In class
+
+1. 練習更深度的EDA
+
+* At home
+
+1. 回家練習
+
+### week5
+
+* In class
+
+* At home
+
+1. 練習
+
+### Final
+
