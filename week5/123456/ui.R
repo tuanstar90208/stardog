@@ -14,18 +14,20 @@ tabPanel(
   ))
 ),
 
-navbarMenu("圖型",
+navbarMenu("教育程度",
            
-           tabPanel("條狀圖",
+           tabPanel("博士",
                     
-                    sidebarLayout(
-                      sidebarPanel(
-                        radioButtons("radio", label = "Choices", choices = list("Choice 1" = 1, "Choice 2" = 2)),
-                        sliderInput("slider1", label = "Slider", min = 0, max = 100, value = 50)
-                      ),
-                      mainPanel("逮給厚，哇喜逮頑歐郎")
-                    )
-           ))
-)
-)
+                    plotOutput("博士")),
            
+           tabPanel("碩士",
+                    plotOutput("碩士")),
+           tabPanel("大學",
+                    plotOutput("大學")),
+           tabPanel("專科",
+                    plotOutput("專科")),
+           tabPanel("高中高職",
+                    plotOutput("高中高職"))
+)
+)
+)

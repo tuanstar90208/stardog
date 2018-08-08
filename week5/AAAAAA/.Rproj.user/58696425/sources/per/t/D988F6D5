@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1533703321759.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3140140006",
+    "id" : "D988F6D5",
+    "lastKnownWriteTime" : 1533703232,
+    "last_content_update" : 1533703232,
+    "path" : "~/GitHub/stardog/week5/123456/app.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "81,39",
+        "scrollLine" : "74"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
