@@ -1,0 +1,15 @@
+navbarMenu("教育程度",
+
+           tabPanel("博士",
+           
+           plotOutput("博士")),
+           
+           tabPanel("碩士",
+                    plotOutput("碩士")),
+           tabPanel("大學",
+                    plotOutput("大學")),
+           tabPanel("專科",
+                    plotOutput("專科")),
+           tabPanel("高中高職",
+                    plotOutput("高中高職"))
+           
